@@ -3,6 +3,6 @@
   hosts: localhost
   tasks:
     - name: Restart NGINX microservice
-      shell: docker-compose restart nginx-service
+      shell: docker restart nginx-service
       args:
         chdir: ..

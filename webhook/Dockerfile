@@ -1,12 +1,8 @@
-FROM python:3.11-alpine
-
-WORKDIR /webhook
-
-RUN apk add --no-cache ansible docker-cli
-
-COPY app.py .
-COPY selfheal.yml .
-
-RUN pip install flask
-
-CMD ["python", "app.py"]
+FROM python:3.10-slim
+WORKDIR /app
+COPY alert_webhook.py .
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && \
+    apt-get update && \
+    apt-get install -y ansible docker.io
+CMD ["python", "alert_webhook.py"]
