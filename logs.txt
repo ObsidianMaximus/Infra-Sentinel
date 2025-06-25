@@ -1,0 +1,143 @@
+Compose can now delegate builds to bake for better performance.
+ To do so, set COMPOSE_BAKE=true.
+#0 building with "default" instance using docker driver
+
+#1 [nginx-service internal] load build definition from Dockerfile
+#1 transferring dockerfile: 134B done
+#1 DONE 0.0s
+
+#2 [webhook internal] load build definition from Dockerfile
+#2 transferring dockerfile: 278B done
+#2 DONE 0.0s
+
+#3 [nginx-service internal] load metadata for docker.io/library/nginx:latest
+#3 DONE 0.7s
+
+#4 [webhook internal] load metadata for docker.io/library/python:3.10-slim
+#4 DONE 0.7s
+
+#5 [nginx-service internal] load .dockerignore
+#5 transferring context: 2B done
+#5 DONE 0.0s
+
+#6 [nginx-service 1/3] FROM docker.io/library/nginx:latest@sha256:dc53c8f25a10f9109190ed5b59bda2d707a3bde0e45857ce9e1efaa32ff9cbc1
+#6 DONE 0.0s
+
+#7 [nginx-service internal] load build context
+#7 transferring context: 32B done
+#7 DONE 0.0s
+
+#8 [nginx-service 2/3] RUN apt-get update && apt-get install -y procps
+#8 CACHED
+
+#9 [nginx-service 3/3] COPY nginx.conf /etc/nginx/nginx.conf
+#9 CACHED
+
+#10 [webhook internal] load .dockerignore
+#10 transferring context: 2B done
+#10 DONE 0.0s
+
+#11 [nginx-service] exporting to image
+#11 exporting layers done
+#11 writing image sha256:bb4f8d8d38dee73a51e989faa2635c6b27c6250a3908192642ca6d328abc2545 done
+#11 naming to docker.io/library/selfheal-nginx-service done
+#11 DONE 0.0s
+
+#12 [webhook 1/5] FROM docker.io/library/python:3.10-slim@sha256:034724ef64585eeb0e82385e9aabcbeabfe5f7cae2c2dcedb1da95114372b6d7
+#12 DONE 0.0s
+
+#13 [webhook internal] load build context
+#13 transferring context: 73B done
+#13 DONE 0.0s
+
+#14 [webhook 4/5] COPY requirements.txt .
+#14 CACHED
+
+#15 [webhook 2/5] WORKDIR /app
+#15 CACHED
+
+#16 [webhook 3/5] COPY alert_webhook.py .
+#16 CACHED
+
+#17 [webhook 5/5] RUN pip install --no-cache-dir -r requirements.txt &&     apt-get update &&     apt-get install -y ansible docker.io
+#17 CACHED
+
+#18 [webhook] exporting to image
+#18 exporting layers done
+#18 writing image sha256:6e2ce2f6a3fbb3bde4ac3d35bbedb38eb4fd880eee8c56042db6c04111d63bab done
+#18 naming to docker.io/library/selfheal-webhook done
+#18 DONE 0.0s
+
+#19 [nginx-service] resolving provenance for metadata file
+#19 DONE 0.0s
+
+#20 [webhook] resolving provenance for metadata file
+#20 DONE 0.0s
+Attaching to nginx-service, alertmanager-1, nginx-exporter-1, prometheus-1, webhook-1
+nginx-service     | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+nginx-service     | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+nginx-service     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+nginx-service     | 10-listen-on-ipv6-by-default.sh: info: IPv6 listen already enabled
+nginx-service     | /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+nginx-service     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+nginx-service     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+nginx-service     | /docker-entrypoint.sh: Configuration complete; ready for start up
+webhook-1         |  * Serving Flask app 'alert_webhook'
+webhook-1         |  * Debug mode: off
+nginx-service     | 49.36.214.39 - - [25/Jun/2025:16:20:14 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+nginx-service     | 49.36.214.39 - - [25/Jun/2025:16:20:16 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+nginx-service     | 172.18.0.5 - - [25/Jun/2025:16:20:17 +0000] "GET /nginx_status HTTP/1.1" 200 97 "-" "NGINX-Prometheus-Exporter/v1.4.2"
+[Knginx-service exited with code 0
+webhook-1         | 
+webhook-1         | PLAY [Restart NGINX microservice] **********************************************
+webhook-1         | 
+webhook-1         | TASK [Gathering Facts] *********************************************************
+webhook-1         | ok: [localhost]
+webhook-1         | 
+webhook-1         | TASK [Restart NGINX microservice] **********************************************
+nginx-service     | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+nginx-service     | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+nginx-service     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+nginx-service     | 10-listen-on-ipv6-by-default.sh: info: IPv6 listen already enabled
+nginx-service     | /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+nginx-service     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+nginx-service     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+nginx-service     | /docker-entrypoint.sh: Configuration complete; ready for start up
+webhook-1         | changed: [localhost]
+webhook-1         | 
+webhook-1         | PLAY RECAP *********************************************************************
+webhook-1         | localhost                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+webhook-1         | 
+nginx-service     | 172.18.0.5 - - [25/Jun/2025:16:22:32 +0000] "GET /nginx_status HTTP/1.1" 200 97 "-" "NGINX-Prometheus-Exporter/v1.4.2"
+nginx-service     | 49.36.214.39 - - [25/Jun/2025:16:22:34 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+nginx-service     | 49.36.214.39 - - [25/Jun/2025:16:22:39 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+nginx-service     | 49.36.214.39 - - [25/Jun/2025:16:22:39 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+nginx-service     | 172.18.0.5 - - [25/Jun/2025:16:22:47 +0000] "GET /nginx_status HTTP/1.1" 200 97 "-" "NGINX-Prometheus-Exporter/v1.4.2"
+nginx-service     | 172.18.0.5 - - [25/Jun/2025:16:23:02 +0000] "GET /nginx_status HTTP/1.1" 200 97 "-" "NGINX-Prometheus-Exporter/v1.4.2"
+nginx-service     | 172.18.0.5 - - [25/Jun/2025:16:23:17 +0000] "GET /nginx_status HTTP/1.1" 200 97 "-" "NGINX-Prometheus-Exporter/v1.4.2"
+nginx-service     | 172.18.0.5 - - [25/Jun/2025:16:23:32 +0000] "GET /nginx_status HTTP/1.1" 200 97 "-" "NGINX-Prometheus-Exporter/v1.4.2"
+webhook-1         | 
+webhook-1         | PLAY [Restart NGINX microservice] **********************************************
+webhook-1         | 
+webhook-1         | TASK [Gathering Facts] *********************************************************
+webhook-1         | ok: [localhost]
+webhook-1         | 
+webhook-1         | TASK [Restart NGINX microservice] **********************************************
+[Knginx-service exited with code 0
+nginx-service     | 10-listen-on-ipv6-by-default.sh: info: IPv6 listen already enabled
+nginx-service     | /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+nginx-service     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+nginx-service     | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+nginx-service     | /docker-entrypoint.sh: Configuration complete; ready for start up
+webhook-1         | changed: [localhost]
+webhook-1         | 
+webhook-1         | PLAY RECAP *********************************************************************
+webhook-1         | localhost                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+webhook-1         | 
+nginx-service     | 172.18.0.5 - - [25/Jun/2025:16:23:47 +0000] "GET /nginx_status HTTP/1.1" 200 97 "-" "NGINX-Prometheus-Exporter/v1.4.2"
+nginx-service     | 49.36.214.39 - - [25/Jun/2025:16:23:50 +0000] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
+[Knginx-service exited with code 0
+[Knginx-exporter-1 exited with code 0
+[Kalertmanager-1 exited with code 0
+[Kwebhook-1 exited with code 137
+[Kprometheus-1 exited with code 0
