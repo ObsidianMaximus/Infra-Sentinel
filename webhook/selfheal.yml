@@ -1,0 +1,8 @@
+---
+- name: Restart NGINX microservice
+  hosts: localhost
+  tasks:
+    - name: Restart NGINX microservice
+      shell: docker-compose restart nginx-service
+      args:
+        chdir: ..
