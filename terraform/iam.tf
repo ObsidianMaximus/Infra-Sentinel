@@ -31,7 +31,7 @@ resource "aws_iam_instance_profile" "ssm_instance_profile" {
 }
 
 resource "aws_security_group" "allow_http_ssh" {
-  name        = "allow_http_ssh"
+  name        = "allow_http_ssh_infra"
   description = "Allow HTTP and SSH"
 
   ingress {
