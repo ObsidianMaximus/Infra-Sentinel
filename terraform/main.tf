@@ -1,6 +1,6 @@
 resource "aws_instance" "infra_sent" {
   ami           = var.ami_number # Ubuntu 24.04
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
   security_groups = [aws_security_group.allow_http_ssh_infra.name]
   iam_instance_profile = aws_iam_instance_profile.ssm_instance_profile.name
   user_data = "${file("userdata.sh")}"
