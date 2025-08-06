@@ -30,7 +30,7 @@ resource "aws_iam_instance_profile" "ssm_instance_profile" {
   role = aws_iam_role.ssm_role.name
 }
 
-resource "aws_security_group" "allow_http_ssh" {
+resource "aws_security_group" "allow_http_ssh_infra" {
   name        = "allow_http_ssh_infra"
   description = "Allow HTTP and SSH"
 
