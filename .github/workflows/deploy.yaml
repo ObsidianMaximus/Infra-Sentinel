@@ -22,7 +22,7 @@ jobs:
         run: |
             INSTANCE_ID=$(aws ec2 describe-instances \
               --filters \
-                "Name=tag:Name,Values=Kenshi-SSM-Managed-Instance" \
+                "Name=tag:Name,Values=Infra-Sentinel-SSM-Managed-Instance" \
                 "Name=instance-state-name,Values=running" \
               --query "Reservations[].Instances[].InstanceId" \
               --output text)
