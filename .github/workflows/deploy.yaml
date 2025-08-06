@@ -1,0 +1,47 @@
+name: Deploy Infrastructure
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Get Running Instance ID
+        id: get-instance
+        run: |
+            INSTANCE_ID=$(aws ec2 describe-instances \
+              --filters \
+                "Name=tag:Name,Values=Kenshi-SSM-Managed-Instance" \
+                "Name=instance-state-name,Values=running" \
+              --query "Reservations[].Instances[].InstanceId" \
+              --output text)
+            echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
+
+      - name: Deploy using Docker Compose
+        run: |
+          aws ssm send-command \
+            --instance-ids "${{ env.INSTANCE_ID }}" \
+            --document-name "AWS-RunShellScript" \
+            --region ap-south-1 \
+            --parameters '{
+              "commands": [
+                "cd /home/ubuntu",
+                "sudo rm -rf Infra-Sentinel || true",
+                "git clone https://github.com/ObsidianMaximus/Infra-Sentinel.git",
+                "cd Infra-Sentinel",
+                "docker-compose down || true",
+                "docker-compose pull",
+                "docker-compose up -d --build"
+              ]
+            }'        
